@@ -1,0 +1,12 @@
+CREATE TABLE events (
+  timestamp INTEGER NOT NULL,
+  ip TEXT NOT NULL,
+  instance TEXT NOT NULL,
+  type TEXT NOT NULL,
+  key TEXT NOT NULL,
+  value TEXT NOT NULL
+);
+
+CREATE DATABASE test;
+
+CREATE DATABASE prod;

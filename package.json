@@ -1,0 +1,38 @@
+{
+  "name": "@techgreedy/singularity-metrics",
+  "version": "0.0.1",
+  "description": "Save collected metrics to PostgreSQL",
+  "scripts": {
+    "build": "tsc",
+    "zip": "cd dist && cp ../package* . && npm install --production && zip -r ../function.zip ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tech-greedy/singularity-metrics.git"
+  },
+  "keywords": [
+    "filecoin",
+    "singularity",
+    "metrics"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tech-greedy/singularity-metrics/issues"
+  },
+  "homepage": "https://github.com/tech-greedy/singularity-metrics",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.106",
+    "@types/node": "^16.11.45",
+    "@types/typescript": "^2.0.0",
+    "@types/pg": "^8.6.5",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.2"
+  },
+  "dependencies": {
+    "pg": "^8.8.0"
+  },
+  "author": "",
+  "files": [
+    "dist"
+  ]
+}
