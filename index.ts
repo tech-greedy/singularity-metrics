@@ -1,20 +1,21 @@
 import { Context, APIGatewayProxyResult } from 'aws-lambda';
 import {APIGatewayProxyEventV2} from "aws-lambda/trigger/api-gateway-proxy";
+import { decompress } from '@xingrz/cppzst';
 
 import {Client} from 'pg';
 
 type SingularityEvent = {
-  timestamp: number;
-  ip: string;
-  instance: string;
-  type: string;
-  key: string;
-  value: string;
+  timestamp: number,
+  ip: string,
+  instance: string,
+  type: string,
+  values: {[key: string]: any },
 }
 
 export async function handler (event: APIGatewayProxyEventV2, _: Context): Promise<APIGatewayProxyResult> {
-  console.log(event.body);
-  let events = <SingularityEvent[]>JSON.parse(event.body!)
+  const data = Buffer.from(event.body!, 'base64');
+  const decompressed = await decompress(data);
+  let events = <SingularityEvent[]>JSON.parse(decompressed.toString('utf8'));
   console.log(`Received ${events.length} events`)
   let dbName = process.env.DBNAME_TEST
   if (event.queryStringParameters && event.queryStringParameters['prod'] == 'true') {
@@ -25,12 +26,12 @@ export async function handler (event: APIGatewayProxyEventV2, _: Context): Promi
   });
   await client.connect();
   const queryName = 'insert-event';
-  const queryText = 'INSERT INTO events (timestamp, ip, instance, type, key, value) VALUES ($1, $2, $3, $4, $5, $6)';
+  const queryText = 'INSERT INTO events (timestamp, ip, instance, type, values) VALUES ($1, $2, $3, $4, $5)';
   for(const event of events) {
     await client.query({
       name: queryName,
       text: queryText,
-      values: [event.timestamp, event.ip, event.instance, event.type, event.key, event.value]
+      values: [event.timestamp, event.ip, event.instance, event.type, JSON.stringify(event.values)],
     });
   }
   return {

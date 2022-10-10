@@ -3,8 +3,7 @@ CREATE TABLE events (
   ip TEXT NOT NULL,
   instance TEXT NOT NULL,
   type TEXT NOT NULL,
-  key TEXT NOT NULL,
-  value TEXT NOT NULL
+  values JSONB NOT NULL
 );
 
 CREATE DATABASE test;
