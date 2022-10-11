@@ -6,7 +6,6 @@ import {Client} from 'pg';
 
 type SingularityEvent = {
   timestamp: number,
-  ip: string,
   instance: string,
   type: string,
   values: {[key: string]: any },
@@ -21,17 +20,18 @@ export async function handler (event: APIGatewayProxyEventV2, _: Context): Promi
   if (event.queryStringParameters && event.queryStringParameters['prod'] == 'true') {
     dbName = process.env.DBNAME_PROD
   }
+
   const client = new Client({
     database: dbName,
   });
   await client.connect();
   const queryName = 'insert-event';
   const queryText = 'INSERT INTO events (timestamp, ip, instance, type, values) VALUES ($1, $2, $3, $4, $5)';
-  for(const event of events) {
+  for(const e of events) {
     await client.query({
       name: queryName,
       text: queryText,
-      values: [event.timestamp, event.ip, event.instance, event.type, JSON.stringify(event.values)],
+      values: [e.timestamp, event.requestContext.http.sourceIp, e.instance, e.type, JSON.stringify(e.values)],
     });
   }
   return {
