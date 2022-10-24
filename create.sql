@@ -7,7 +7,3 @@ CREATE TABLE events (
   latitude REAL,
   longitude REAL
 );
-
-CREATE DATABASE test;
-
-CREATE DATABASE prod;
